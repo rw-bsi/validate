@@ -1,4 +1,4 @@
-name: Build & Deploy
+name: CI/CD
 
 concurrency: 
   group: production
@@ -12,7 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: 
       name: production
-      url: https://validate.buildingsmart.org
     steps:
       - name: Execute remote commands
         uses: appleboy/ssh-action@v1.0.3
