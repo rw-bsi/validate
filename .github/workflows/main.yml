@@ -1,7 +1,7 @@
 name: CI/CD
 
 concurrency: 
-  group: production
+  group: development
   cancel-in-progress: true
 
 on:
@@ -11,7 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: 
-      name: production
+      name: development
     steps:
     
       - name: Set up SSH key
