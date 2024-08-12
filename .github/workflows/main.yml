@@ -13,21 +13,18 @@ jobs:
     environment: 
       name: production
     steps:
-      - name: Execute remote commands
-        uses: appleboy/ssh-action@v1.0.3
-        env:
-          FOO: "FOO_VALUE"
-          BAR: "BAR_VALUE"
-          SHA: ${{ github.sha }}
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
-          envs: FOO,BAR,SHA
-          script_stop: true
-          script: |
-            whoami
-            echo "I am $FOO"
-            echo "I am $BAR"
-            echo "sha: $SHA"  
+    
+      - name: Set up SSH key
+        run: |
+          env
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p 22 ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          sudo apt-get install sshpass
+
+      - name: Deploy to server
+        run: |
+          sshpass -p '${{ secrets.SSH_PASSWORD }}' ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<'ENDSSH'
+          whoami
+          ENDSSH
