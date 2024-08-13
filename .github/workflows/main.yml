@@ -30,6 +30,11 @@ jobs:
           cd frontend
           npm install
 
+      - name: Run tests
+        run: |
+          cd frontend
+          npm test
+
       - name: Build & bundle
         run: |
           cd frontend          
@@ -77,6 +82,12 @@ jobs:
           cd backend
           source venv/bin/activate
           python3 manage.py check
+
+      - name: Run tests
+        run: |
+          cd backend
+          source venv/bin/activate
+          python3 manage.py test
         
   deploy:
 
@@ -105,9 +116,13 @@ jobs:
           sudo make stop
           ENDSSH
 
-      - name: Check submodules
+      - name: Fetch submodules
         run: |
           sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
+          cd ${{ vars.PATH }}/backend/apps/ifc_validation/checks/ifc_gherkin_rules && git checkout -q development && git pull
+          cd ./ifc_validation_models && git checkout -q development && git pull
+          cd ${{ vars.PATH }}/backend/apps/ifc_validation/checks/step_file_parser && git checkout -q master && git pull
+          cd ${{ vars.PATH }}/backend/apps/ifc_validation_models && git checkout -q development && git pull
           cd ${{ vars.PATH }}
           ./check-submodules.sh
           ENDSSH
