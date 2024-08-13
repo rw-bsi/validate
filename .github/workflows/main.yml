@@ -25,8 +25,23 @@ jobs:
       - name: Install sshpass
         run: sudo apt-get install sshpass
 
-      - name: Deploy to server
+      - name: Stop Docker containers
         run: |
           sshpass ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<'ENDSSH'
-          whoami
+          cd ${{ vars.PATH }}
+          sudo make stop
+          ENDSSH
+
+      - name: Build Docker images
+        run: |
+          sshpass ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<'ENDSSH'
+          cd ${{ vars.PATH }}
+          sudo make build
+          ENDSSH
+
+      - name: Start Docker containers
+        run: |
+          sshpass ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<'ENDSSH'
+          cd ${{ vars.PATH }}
+          sudo docker compose -f ${{ vars.DOCKER_COMPOSE_FILE }} --env-file ${{ vars.ENV_FILE }} up -d
           ENDSSH
