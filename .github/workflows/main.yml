@@ -47,6 +47,13 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v4
 
+      - name: Fetch submodules
+        run: |
+          cd backend
+          cd apps
+          git submodule update --init --recursive
+          git submodule update --remote
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
