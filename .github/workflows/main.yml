@@ -56,28 +56,28 @@ jobs:
         
       - name: Stop Docker containers
         run: |
-          sshpass ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<'ENDSSH'
+          sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
           cd ${{ vars.PATH }}
           sudo make stop
           ENDSSH
 
       - name: Check submodules
         run: |
-          sshpass ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<'ENDSSH'
+          sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
           cd ${{ vars.PATH }}
           ./check-submodules.sh
           ENDSSH
 
       - name: Build Docker images
         run: |
-          sshpass ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<'ENDSSH'
+          sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
           cd ${{ vars.PATH }}
           sudo make build
           ENDSSH
 
       - name: Start Docker containers
         run: |
-          sshpass ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<'ENDSSH'
+          sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
           cd ${{ vars.PATH }}
           sudo docker compose -f ${{ vars.DOCKER_COMPOSE_FILE }} --env-file ${{ vars.ENV_FILE }} up -d
           ENDSSH
