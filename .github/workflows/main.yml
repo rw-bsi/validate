@@ -9,13 +9,38 @@ on:
 
 jobs:
 
-  setup_ssh:
+  build:
+
+    runs-on: ubuntu-latest
+    environment:
+      name: development
+      
+    steps:
+      - name: Checkout sources
+        uses: action/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+                
+      - name: Install packages
+        run: |
+          cd frontend
+          npm install
+
+      - name: Build & bundle
+        run: |
+          cd frontend
+          npm run build
+        
+  deploy:
   
     runs-on: ubuntu-latest
     environment: 
       name: development
+      
     steps:
-
       - name: Set up SSH key
         run: |
           env
@@ -26,14 +51,7 @@ jobs:
   
       - name: Install sshpass
         run: sudo apt-get install sshpass
-
-  build:
-  
-    runs-on: ubuntu-latest
-    environment: 
-      name: development
-    steps:
-    
+        
       - name: Stop Docker containers
         run: |
           sshpass ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<'ENDSSH'
