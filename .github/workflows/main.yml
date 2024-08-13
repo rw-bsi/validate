@@ -32,6 +32,13 @@ jobs:
           sudo make stop
           ENDSSH
 
+      - name: Check submodules
+        run: |
+          sshpass ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<'ENDSSH'
+          cd ${{ vars.PATH }}
+          check-submodules.sh
+          ENDSSH
+
       - name: Build Docker images
         run: |
           sshpass ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<'ENDSSH'
