@@ -8,12 +8,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+
+  setup_ssh:
+  
     runs-on: ubuntu-latest
     environment: 
       name: development
     steps:
-    
+
       - name: Set up SSH key
         run: |
           env
@@ -21,10 +23,17 @@ jobs:
           echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -p 22 ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-
+  
       - name: Install sshpass
         run: sudo apt-get install sshpass
 
+  build:
+  
+    runs-on: ubuntu-latest
+    environment: 
+      name: development
+    steps:
+    
       - name: Stop Docker containers
         run: |
           sshpass ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} <<'ENDSSH'
