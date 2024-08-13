@@ -81,7 +81,7 @@ jobs:
       - name: Run Django migrations
         run: |
           cd backend
-          source /venv/bin/activate
+          source venv/bin/activate
           python3 manage.py makemigrations
           python3 manage.py migrate
         
