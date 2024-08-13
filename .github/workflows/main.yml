@@ -40,7 +40,6 @@ jobs:
 
     name: build backend
     runs-on: ubuntu-latest
-    needs: build_frontend
     environment:
       name: development
 
@@ -62,12 +61,26 @@ jobs:
         run: |
           cd backend
           make install
+          pip install ifcopenshell # TEMP workaround
+
+      - name: Check Django config
+        run: |
+          cd backend
+          source .dev/bin/activate
+          python3 manage.py check
+          
+      - name: Run Django migrations
+        run: |
+          cd backend
+          source .dev/bin/activate
+          python3 manage.py makemigrations
+          python3 manage.py migrate
         
   deploy:
 
     name: deploy to server 
     runs-on: ubuntu-latest
-    needs: build_backend
+    needs: [build_frontend, build_backend]
     environment: 
       name: development
       
