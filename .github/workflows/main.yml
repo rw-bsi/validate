@@ -55,24 +55,26 @@ jobs:
       - name: Create venv
         run: |
           cd backend
-          make venv
+          python3.11 -m venv venv
 
       - name: Install packages
         run: |
           cd backend
-          make install
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
           pip install ifcopenshell # TEMP workaround
 
       - name: Check Django config
         run: |
           cd backend
-          source .dev/bin/activate
+          source venv/bin/activate
           python3 manage.py check
           
       - name: Run Django migrations
         run: |
           cd backend
-          source .dev/bin/activate
+          source /venv/bin/activate
           python3 manage.py makemigrations
           python3 manage.py migrate
         
