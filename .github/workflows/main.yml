@@ -30,6 +30,12 @@ jobs:
           cd frontend
           npm install
 
+      - name: Run ESLint
+        run: |
+          cd frontend
+          unset CI # ignore ESLint warnings
+          npm run lint
+
       - name: Build & bundle
         run: |
           cd frontend          
