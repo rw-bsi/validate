@@ -101,7 +101,6 @@ jobs:
     steps:
       - name: Set up SSH key
         run: |
-          env
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
@@ -130,7 +129,15 @@ jobs:
           cd ${{ vars.PATH }}
           ./check-submodules.sh
           ENDSSH
-
+      
+      - name: Set version
+        run: |
+          cd ${{ vars.PATH }}
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          VERSION="${{ vars.VERSION }}-${COMMIT_HASH}"
+          echo "Set version to ${VERSION}"
+          echo "${VERSION}" > VERSION
+          
       - name: Build Docker images
         run: |
           sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
