@@ -1,7 +1,7 @@
 {
     "name": "bsi-valsvc-ui",
-    "description": "WebUI of the bSI Validation Service",    
-    "version": "0.6.5",
+    "description": "WebUI of the bSI Validation Service",
+    "version": "0.6.6",
     "author": "buildingSMART International Ltd.",
     "license": "MIT",
     "private": true,
@@ -22,10 +22,17 @@
         "react-scripts": "5.0.1",
         "web-vitals": "^2.1.4"
     },
+    "devDependencies": {
+        "@eslint/js": "^9.9.0",
+        "eslint": "^8.57.0",
+        "eslint-plugin-react": "^7.35.0",
+        "globals": "^15.9.0"
+    },
     "scripts": {
         "start": "NODE_ENV=development react-scripts start",
         "build": "NODE_ENV=production react-scripts build",
         "test": "react-scripts test",
+        "lint": "eslint .",
         "eject": "react-scripts eject",
         "backend": "cd ../backend && make start-backend"
     },
