@@ -55,9 +55,19 @@ jobs:
           COMMIT_HASH=$(git rev-parse --short HEAD)
           VERSION="${{ vars.VERSION }}-${COMMIT_HASH}"
           echo "Set VERSION to ${VERSION}"
-          echo "${VERSION}" > VERSION
+          echo "${VERSION}" > VERSION          
           ENDSSH
-          
+
+      - name: Tag commit
+        run: |
+          sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
+          cd ${{ vars.PATH }}
+          git config --global user.name "bSI Validation Service CI/CD"
+          git config --global user.email "validate@buildingsmart.org"
+          git tag ${VERSION}
+          git push origin ${VERSION}
+          ENDSSH
+
       - name: Build Docker images
         run: |
           sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
