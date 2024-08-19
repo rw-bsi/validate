@@ -1,6 +1,6 @@
 name: example-client-payload-action
   
-on: repository_dispatch
+on: workflow_run
   
 jobs:
 
