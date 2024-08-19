@@ -1,4 +1,4 @@
-name: Build (Development)
+name: Build (main)
 
 concurrency: 
   group: development
