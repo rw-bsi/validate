@@ -1,6 +1,6 @@
 name: example-client-payload-action
   
-on: workflow_run
+on: workflow_dispatch
   
 jobs:
 
@@ -9,9 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: 'echo "repo: ${{ github.event.repository }}"'
-      - run: 'echo "head_branch: ${{ github.event.workflow_run.head_branch }}"'
-      - run: 'echo "event: ${{ github.event.workflow_run.event }}"'
+      - run: ${{ tojson(github.event) }}
+        shell: cat {0}
       - run: 'echo "field: ${{ github.event.client_payload.foo }}"'
       - run: 'echo "payload: ${{ toJson(github.event.client_payload) }}"'
       - run: echo baz
