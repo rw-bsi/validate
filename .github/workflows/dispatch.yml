@@ -60,13 +60,24 @@ jobs:
       - name: Show submodule status
         run: |
           cd ${{ github.workspace }}
-          git submodule foreach --recursive "git remote get-url origin && git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD"
+          git submodule foreach --recursive "git remote get-url origin && git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD && echo $''"
+
+      - name: Show repo status
+        run: |
+          cd ${{ github.workspace }}
+          echo "Validate repository"
+          git remote get-url origin && git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD
 
       - name: Commit changes (if any)
         run: |
           cd ${{ github.workspace }}
           git add backend/apps/ifc_validation/checks/ifc_gherkin_rules
+          git add backend/apps/ifc_validation/checks/step_file_parser
           git add backend/apps/ifc_validation_models
+          git config --global user.name 'bSI-Bot'
+          git config --global user.email 'bSI-Bot@users.noreply.github.com'
+          git commit -am "Update of submodules (bSI-Bot via GH action)"
+          git push
 
       - name: Show git status
         run: |
