@@ -22,16 +22,20 @@ jobs:
         run: echo "ifc-validation-data-model (development branch)"
         if: ${{ github.event.client_payload.repo == 'ifc-validation-data-model' && github.event.client_payload.branch == 'development' }}
 
-      - name: Checkout sources
-        uses: actions/checkout@v4
-        with:
-          ref: development # branch of Validate repo
-          submodules: 'true'
+      # - name: Checkout sources
+      #  uses: actions/checkout@v4
+      #  with:
+      #    ref: development # branch of Validate repo
+      #    submodules: 'true'
 
-      - name: Show submodule status
+      - name: Checkout sources & submodules
         run: |
           cd ${{ github.workspace }}
-          git submodule foreach --recursive "git remote get-url origin && git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD"
+          git clone https://github.com/rw-bsi/validate .
+          git fetch
+          git checkout -q --track origin/development
+          git submodule update --init --recursive
+          git submodule update --remote
 
       - name: Fetch latest submodule 1
         run: |
