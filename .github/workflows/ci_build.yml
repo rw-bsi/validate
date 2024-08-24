@@ -91,22 +91,4 @@ jobs:
         run: |
           cd backend
           source venv/bin/activate
-          python3 manage.py test  
-
-  deploy:
-
-    name: deploy to DEV
-    runs-on: ubuntu-latest
-    needs: [build_frontend, build_backend]
-    environment:
-      name: development
-  
-    steps:
-      - name: Checkout sources # required for workflows
-        uses: actions/checkout@v4
-        with:
-          ref: development
-          sparse-checkout: .github
-          
-      - name: Deploy to DEV
-        uses: ./.github/workflows/cd_deploy.yml
+          python3 manage.py test
