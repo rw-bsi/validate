@@ -1,4 +1,4 @@
-name: CI Build (main)
+name: CI Build
 
 concurrency: 
   group: production
