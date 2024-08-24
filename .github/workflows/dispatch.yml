@@ -9,17 +9,25 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - run: ${{ tojson(github.event) }}
-        shell: cat {0}
+      - name: Checkout sources
+        uses: actions/checkout@v4
       
-      - run: echo "ifc-gherkin-rules (development branch)"
+      - name: Log received event
+        run: ${{ tojson(github.event) }}
+        shell: cat {0}
+
+      - name: Dispatch from ifc-gherkin-rules (development)
+        run: echo "ifc-gherkin-rules (development branch)"
         if: ${{ github.event.client_payload.repo == 'ifc-gherkin-rules' && github.event.client_payload.branch == 'development' }}
         
-      - run: echo "ifc-gherkin-rules (main branch)"
+      - name: Dispatch from ifc-gherkin-rules (main)
+        run: echo "ifc-gherkin-rules (main branch)"
         if: ${{ github.event.client_payload.repo == 'ifc-gherkin-rules' && github.event.client_payload.branch == 'main' }}
-        
-      - run: echo "ifc-validation-data-model (development branch)"
+
+      - name: Dispatch from ifc-validation-data-model (development)
+        run: echo "ifc-validation-data-model (development branch)"
         if: ${{ github.event.client_payload.repo == 'ifc-validation-data-model' && github.event.client_payload.branch == 'development' }}
-        
-      - run: echo "ifc-validation-data-model (main branch)"
+
+      - name: Dispatch from ifc-validation-data-model (main)
+        run: echo "ifc-validation-data-model (main branch)"
         if: ${{ github.event.client_payload.repo == 'ifc-validation-data-model' && github.event.client_payload.branch == 'main' }}
