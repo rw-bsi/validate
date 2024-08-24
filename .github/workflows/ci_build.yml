@@ -104,6 +104,9 @@ jobs:
     steps:
       - name: Checkout sources # required for workflows
         uses: actions/checkout@v4
+        with:
+          ref: development
+          sparse-checkout: .github
           
       - name: Deploy to DEV
         uses: ./.github/workflows/cd_deploy.yml
