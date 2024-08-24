@@ -27,9 +27,10 @@ jobs:
       
       - name: Fetch latest submodules
         run: |
-          cd /backend/apps/ifc_validation/checks/ifc_gherkin_rules && git checkout -q ${{ github.event.client_payload.branch }} && git pull
+          cd ${{ github.workspace }}
+          cd backend/apps/ifc_validation/checks/ifc_gherkin_rules && git checkout -q ${{ github.event.client_payload.branch }} && git pull
           cd ./ifc_validation_models && git checkout -q ${{ github.event.client_payload.branch }} && git pull
-          cd /backend/apps/ifc_validation/checks/step_file_parser && git checkout -q master && git pull
-          cd /backend/apps/ifc_validation_models && git checkout -q ${{ github.event.client_payload.branch }} && git pull
-          cd /
+          cd ${{ github.workspace }}/backend/apps/ifc_validation/checks/step_file_parser && git checkout -q master && git pull
+          cd ${{ github.workspace }}/backend/apps/ifc_validation_models && git checkout -q ${{ github.event.client_payload.branch }} && git pull
+          cd ${{ github.workspace }}
           ./check-submodules.sh
