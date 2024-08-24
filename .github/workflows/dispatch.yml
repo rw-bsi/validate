@@ -9,19 +9,19 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v4
+      # - uses: actions/checkout@v4
       
       - run: ${{ tojson(github.event) }}
         shell: cat {0}
       
-      - run: echo ifc-gherkin-rules (development branch)
-        if: ${{ github.event.client_payload.repo == 'ifc-gherkin-rules' && github.event.client_payload.branch = 'development' }}
+      # - run: echo ifc-gherkin-rules (development branch)
+      #   if: ${{ github.event.client_payload.repo == 'ifc-gherkin-rules' && github.event.client_payload.branch = 'development' }}
         
-      - run: echo ifc-gherkin-rules (main branch)
-        if: ${{ github.event.client_payload.repo == 'ifc-gherkin-rules' && github.event.client_payload.branch = 'main' }}
+      # - run: echo ifc-gherkin-rules (main branch)
+      #   if: ${{ github.event.client_payload.repo == 'ifc-gherkin-rules' && github.event.client_payload.branch = 'main' }}
         
-      - run: echo ifc-validation-data-model (development branch)
-        if: ${{ github.event.client_payload.repo == 'ifc-validation-data-model' && github.event.client_payload.branch = 'development' }}
+      # - run: echo ifc-validation-data-model (development branch)
+      #   if: ${{ github.event.client_payload.repo == 'ifc-validation-data-model' && github.event.client_payload.branch = 'development' }}
         
-      - run: echo ifc-validation-data-model (main branch)
-        if: ${{ github.event.client_payload.repo == 'ifc-validation-data-model' && github.event.client_payload.branch = 'main' }}
+      # - run: echo ifc-validation-data-model (main branch)
+      #   if: ${{ github.event.client_payload.repo == 'ifc-validation-data-model' && github.event.client_payload.branch = 'main' }}
