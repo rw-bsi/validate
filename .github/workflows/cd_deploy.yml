@@ -5,6 +5,10 @@ concurrency:
   cancel-in-progress: true
 
 on:
+  workflow_run:
+    workflows: [ "DEV Build (CI)" ]
+    types:
+      - completed
   workflow_dispatch:
 
 jobs:
