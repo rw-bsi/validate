@@ -38,15 +38,10 @@ jobs:
 
       - name: Fetch latest submodule 2
         run: |
-          cd ${{ github.workspace }}/backend/apps/ifc_validation/checks/ifc_gherkin_rules/ifc_validation_models 
-          git checkout -q --track origin/${{ github.event.client_payload.branch }} 
-
-      - name: Fetch latest submodule 3
-        run: |
           cd ${{ github.workspace }}/backend/apps/ifc_validation/checks/step_file_parser 
           git checkout -B master
 
-      - name: Fetch latest submodule 4
+      - name: Fetch latest submodule 3
         run: |
           cd ${{ github.workspace }}/backend/apps/ifc_validation_models
           git checkout -q --track origin/${{ github.event.client_payload.branch }}
