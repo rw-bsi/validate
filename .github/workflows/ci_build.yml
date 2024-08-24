@@ -1,4 +1,4 @@
-name: DEV Build & Deploy (CI/CD)
+name: DEV Build
 
 concurrency: 
   group: development
