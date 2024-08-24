@@ -31,24 +31,32 @@ jobs:
       - name: Show submodule status
         run: |
           cd ${{ github.workspace }}
-          git submodule foreach --recursive "git remote get-url origin && git rev-parse --short HEAD"
+          git submodule foreach --recursive "git remote get-url origin && git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD"
 
       - name: Fetch latest submodule 1
         run: |
           cd ${{ github.workspace }}/backend/apps/ifc_validation/checks/ifc_gherkin_rules 
-          git fetch
           git checkout -B ${{ github.event.client_payload.branch }} 
 
       - name: Fetch latest submodule 2
         run: |
+          cd ${{ github.workspace }}/backend/apps/ifc_validation/checks/ifc_gherkin_rules/ifc_validation_models 
+          git checkout -B ${{ github.event.client_payload.branch }} 
+
+      - name: Fetch latest submodule 3
+        run: |
+          cd ${{ github.workspace }}/backend/apps/ifc_validation/checks/step_file_parser 
+          git checkout -B master
+
+      - name: Fetch latest submodule 4
+        run: |
           cd ${{ github.workspace }}/backend/apps/ifc_validation_models
-          git fetch
           git checkout -B ${{ github.event.client_payload.branch }}
           
       - name: Show submodule status
         run: |
           cd ${{ github.workspace }}
-          git submodule foreach --recursive "git remote get-url origin && git rev-parse --short HEAD"
+          git submodule foreach --recursive "git remote get-url origin && git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD"
 
       - name: Commit changes (if any)
         run: |
