@@ -1,4 +1,4 @@
-name: CI Build
+name: PROD Build (manually)
 
 concurrency: 
   group: production
