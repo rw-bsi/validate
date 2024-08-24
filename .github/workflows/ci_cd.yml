@@ -133,7 +133,7 @@ jobs:
           ./check-submodules.sh
           ENDSSH
       
-      - name: Set version
+      - name: Set VERSION
         run: |
           sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
           cd ${{ vars.REPO_CLONE_PATH }}
@@ -142,16 +142,6 @@ jobs:
           echo "Set VERSION to ${VERSION}"
           echo "${VERSION}" > VERSION          
           ENDSSH
-
-      # - name: Tag commit
-      #  run: |
-      #    sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
-      #    cd ${{ vars.REPO_CLONE_PATH }}
-      #    git config --global user.name "bSI Validation Service CI/CD"
-      #    git config --global user.email "validate@buildingsmart.org"
-      #    git tag ${VERSION}
-      #    git push origin ${VERSION}
-      #    ENDSSH
 
       - name: Build Docker images
         run: |
