@@ -22,16 +22,16 @@ jobs:
         run: echo "ifc-validation-data-model (development branch)"
         if: ${{ github.event.client_payload.repo == 'ifc-validation-data-model' && github.event.client_payload.branch == 'development' }}
 
-      # - name: Checkout sources
-      #  uses: actions/checkout@v4
-      #  with:
-      #    ref: development # branch of Validate repo
-      #    submodules: 'true'
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          ref: development # branch of Validate repo
+          submodules: 'true'
 
       - name: Checkout sources & submodules
         run: |
           cd ${{ github.workspace }}
-          git clone https://github.com/rw-bsi/validate .
+          #git clone https://github.com/rw-bsi/validate .
           git fetch
           git checkout -q --track origin/development
           git submodule update --init --recursive
@@ -68,12 +68,16 @@ jobs:
           echo "Validate repository"
           git remote get-url origin && git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD
 
-      - name: Commit changes (if any)
+      - name: Add changes (if any)
         run: |
           cd ${{ github.workspace }}
           git add backend/apps/ifc_validation/checks/ifc_gherkin_rules
           git add backend/apps/ifc_validation/checks/step_file_parser
           git add backend/apps/ifc_validation_models
+
+      - name: Commit changes (if any)
+        run: |
+          cd ${{ github.workspace }}
           git config --local user.name 'github-actions[bot]'
           git config --local user.email 'github-actions[bot]@users.noreply.github.com'
           git commit -am "Update of submodules (bSI-Bot via GH action)"
