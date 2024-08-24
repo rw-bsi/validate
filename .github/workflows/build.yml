@@ -1,10 +1,16 @@
-name: CI Build (Dev)
+name: CI Build
 
 concurrency: 
   group: development
   cancel-in-progress: true
 
 on:
+  push:
+    branches:
+      - development
+  pull_request:
+    branches:
+      - development
   workflow_dispatch:
 
 jobs:
