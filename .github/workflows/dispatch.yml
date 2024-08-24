@@ -22,16 +22,10 @@ jobs:
         run: echo "ifc-validation-data-model (development branch)"
         if: ${{ github.event.client_payload.repo == 'ifc-validation-data-model' && github.event.client_payload.branch == 'development' }}
 
-      # - name: Checkout sources
-      #   uses: actions/checkout@v4
-      #   with:
-      #     ref: development # branch of Validate repo
-      #     submodules: 'true'
-
       - name: Checkout sources & submodules
         run: |
           cd ${{ github.workspace }}
-          git clone https://github.com/rw-bsi/validate .
+          git clone ${{ github.event.repository.clone_url }} .
           git fetch
           git checkout -q --track origin/development
           git submodule update --init --recursive
@@ -68,7 +62,7 @@ jobs:
           echo "Validate repository"
           git remote get-url origin && git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD
 
-      - name: Add changes (if any)
+      - name: Add changes
         run: |
           cd ${{ github.workspace }}
           git add backend/apps/ifc_validation/checks/ifc_gherkin_rules
@@ -83,11 +77,15 @@ jobs:
       - name: Commit changes (if any)
         run: |
           cd ${{ github.workspace }}
-          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/rw-bsi/validate      
-          git config --local user.name 'github-actions[bot]'
-          git config --local user.email 'github-actions[bot]@users.noreply.github.com'
-          git commit -am "Update of submodules (bSI-Bot via GH action)"
-          git push origin development
+          if [ -n "$(git status --porcelain)" ]; then            
+            git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.event.repository.owner.login }}/${{ github.event.repository.name }}
+            git config --local user.name 'github-actions[bot]'
+            git config --local user.email 'github-actions[bot]@users.noreply.github.com'
+            git commit -am "Update of submodules (bSI-Bot via GH action)"
+            git diff --quiet && git diff --staged --quiet git push origin development
+          else
+            echo 'No changes to commit'
+          fi
 
       - name: Show git status (post)
         run: |
