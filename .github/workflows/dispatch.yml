@@ -28,14 +28,14 @@ jobs:
           ref: development # branch of Validate repo
           submodules: 'true'
 
-      - name: Checkout sources & submodules
-        run: |
-          cd ${{ github.workspace }}
-          #git clone https://github.com/rw-bsi/validate .
-          git fetch
-          git checkout -q --track origin/development
-          git submodule update --init --recursive
-          git submodule update --remote
+      # - name: Checkout sources & submodules
+      #  run: |
+      #    cd ${{ github.workspace }}
+      #    git clone https://github.com/rw-bsi/validate .
+      #    git fetch
+      #    git checkout -q --track origin/development
+      #    git submodule update --init --recursive
+      #    git submodule update --remote
 
       - name: Fetch latest submodule 1
         run: |
