@@ -24,6 +24,9 @@ jobs:
 
       - name: Checkout sources
         uses: actions/checkout@v4
+        with:
+          ref: development # branch of Validate repo
+          submodules: 'true'
       
       - name: Fetch latest submodules
         run: |
