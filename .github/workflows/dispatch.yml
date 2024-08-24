@@ -7,11 +7,9 @@ jobs:
   on_dispatch:
     name: On Dispatch
     runs-on: ubuntu-latest
+    if: ${{ github.event.client_payload.branch == 'development' }}
     
     steps:
-      - name: Checkout sources
-        uses: actions/checkout@v4
-      
       - name: Log received event
         run: ${{ tojson(github.event) }}
         shell: cat {0}
@@ -20,14 +18,18 @@ jobs:
         run: echo "ifc-gherkin-rules (development branch)"
         if: ${{ github.event.client_payload.repo == 'ifc-gherkin-rules' && github.event.client_payload.branch == 'development' }}
         
-      - name: Dispatch from ifc-gherkin-rules (main)
-        run: echo "ifc-gherkin-rules (main branch)"
-        if: ${{ github.event.client_payload.repo == 'ifc-gherkin-rules' && github.event.client_payload.branch == 'main' }}
-
       - name: Dispatch from ifc-validation-data-model (development)
         run: echo "ifc-validation-data-model (development branch)"
         if: ${{ github.event.client_payload.repo == 'ifc-validation-data-model' && github.event.client_payload.branch == 'development' }}
 
-      - name: Dispatch from ifc-validation-data-model (main)
-        run: echo "ifc-validation-data-model (main branch)"
-        if: ${{ github.event.client_payload.repo == 'ifc-validation-data-model' && github.event.client_payload.branch == 'main' }}
+      - name: Checkout sources
+        uses: actions/checkout@v4
+      
+      - name: Fetch latest submodules
+        run: |
+          cd /backend/apps/ifc_validation/checks/ifc_gherkin_rules && git checkout -q ${{ github.event.client_payload.branch }} && git pull
+          cd ./ifc_validation_models && git checkout -q ${{ github.event.client_payload.branch }} && git pull
+          cd /backend/apps/ifc_validation/checks/step_file_parser && git checkout -q master && git pull
+          cd /backend/apps/ifc_validation_models && git checkout -q ${{ github.event.client_payload.branch }} && git pull
+          cd /
+          ./check-submodules.sh
