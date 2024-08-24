@@ -74,10 +74,10 @@ jobs:
           git add backend/apps/ifc_validation/checks/ifc_gherkin_rules
           git add backend/apps/ifc_validation/checks/step_file_parser
           git add backend/apps/ifc_validation_models
-          git config --global user.name 'bSI-Bot'
-          git config --global user.email 'bSI-Bot@users.noreply.github.com'
+          git config --local user.name 'github-actions[bot]'
+          git config --local user.email 'github-actions[bot]@users.noreply.github.com'
           git commit -am "Update of submodules (bSI-Bot via GH action)"
-          git push
+          git push origin development
 
       - name: Show git status
         run: |
