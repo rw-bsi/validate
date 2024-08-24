@@ -27,13 +27,21 @@ jobs:
         with:
           ref: development # branch of Validate repo
           submodules: 'true'
-      
-      - name: Fetch latest submodules
+
+      - name: Fetch latest submodule #1
         run: |
-          cd ${{ github.workspace }}
-          git submodule update --remote
-          cd ${{ github.workspace }}/backend/apps/ifc_validation/checks/ifc_gherkin_rules && git checkout -q ${{ github.event.client_payload.branch }} && git pull
-          cd ${{ github.workspace }}/backend/apps/ifc_validation_models && git checkout -q ${{ github.event.client_payload.branch }} && git pull
+          cd ${{ github.workspace }}/backend/apps/ifc_validation/checks/ifc_gherkin_rules 
+          git checkout -q ${{ github.event.client_payload.branch }} 
+          git pull
+
+      - name: Fetch latest submodule #2
+        run: |
+          cd ${{ github.workspace }}/backend/apps/ifc_validation_models
+          git checkout -q ${{ github.event.client_payload.branch }}
+          git pull
+          
+      - name: Show submodule status
+        run: |
           cd ${{ github.workspace }}
           ./check-submodules.sh
 
