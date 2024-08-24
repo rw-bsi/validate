@@ -1,4 +1,4 @@
-name: Deploy (Development)
+name: Deploy (manually)
 
 concurrency: 
   group: development
