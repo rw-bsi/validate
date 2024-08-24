@@ -13,18 +13,15 @@ jobs:
       
       - run: ${{ tojson(github.event) }}
         shell: cat {0}
-        
-      - run: 'echo "field: ${{ github.event.client_payload.foo }}"'
-      - run: 'echo "payload: ${{ toJson(github.event.client_payload) }}"'
       
       - run: echo ifc-gherkin-rules (development branch)
-        if: github.event.client_payload.repo == 'ifc-gherkin-rules' && github.event.client_payload.branch = 'development'
+        if: ${{ github.event.client_payload.repo == 'ifc-gherkin-rules' && github.event.client_payload.branch = 'development' }}
         
       - run: echo ifc-gherkin-rules (main branch)
-        if: github.event.client_payload.repo == 'ifc-gherkin-rules' && github.event.client_payload.branch = 'main'
+        if: ${{ github.event.client_payload.repo == 'ifc-gherkin-rules' && github.event.client_payload.branch = 'main' }}
         
       - run: echo ifc-validation-data-model (development branch)
-        if: github.event.client_payload.repo == 'ifc-validation-data-model' && github.event.client_payload.branch = 'development'
+        if: ${{ github.event.client_payload.repo == 'ifc-validation-data-model' && github.event.client_payload.branch = 'development' }}
         
       - run: echo ifc-validation-data-model (main branch)
-        if: github.event.client_payload.repo == 'ifc-validation-data-model' && github.event.client_payload.branch = 'main'
+        if: ${{ github.event.client_payload.repo == 'ifc-validation-data-model' && github.event.client_payload.branch = 'main' }}
