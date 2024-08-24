@@ -31,7 +31,7 @@ jobs:
       - name: Show submodule status
         run: |
           cd ${{ github.workspace }}
-          ./check-submodules.sh
+          git submodule foreach --recursive "git remote get-url origin && git rev-parse --short HEAD"
 
       - name: Fetch latest submodule 1
         run: |
@@ -48,7 +48,7 @@ jobs:
       - name: Show submodule status
         run: |
           cd ${{ github.workspace }}
-          ./check-submodules.sh
+          git submodule foreach --recursive "git remote get-url origin && git rev-parse --short HEAD"
 
       - name: Commit changes (if any)
         run: |
