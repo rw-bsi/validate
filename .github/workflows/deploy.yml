@@ -30,14 +30,14 @@ jobs:
       - name: Stop Docker containers
         run: |
           sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
-          cd ${{ vars.PATH }}
+          cd ${{ vars.REPO_CLONE_PATH }}
           sudo make stop
           ENDSSH
 
       - name: Fetch sources & submodules
         run: |
           sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
-          cd ${{ vars.PATH }}
+          cd ${{ vars.REPO_CLONE_PATH }}
           git checkout -q ${{ vars.BRANCH_NAME }} && git pull
           sudo make fetch-modules
           cd ${{ vars.PATH }}/backend/apps/ifc_validation/checks/ifc_gherkin_rules && git checkout -q ${{ vars.BRANCH_NAME }} && git pull
@@ -51,7 +51,7 @@ jobs:
       - name: Set version
         run: |
           sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
-          cd ${{ vars.PATH }}
+          cd ${{ vars.REPO_CLONE_PATH }}
           COMMIT_HASH=$(git rev-parse --short HEAD)
           VERSION="${{ vars.VERSION }}-${COMMIT_HASH}"
           echo "Set VERSION to ${VERSION}"
@@ -61,7 +61,7 @@ jobs:
       # - name: Tag commit
       #  run: |
       #    sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
-      #    cd ${{ vars.PATH }}
+      #    cd ${{ vars.REPO_CLONE_PATH }}
       #    git config --global user.name "bSI Validation Service CI/CD"
       #    git config --global user.email "validate@buildingsmart.org"
       #    git tag ${VERSION}
@@ -71,13 +71,13 @@ jobs:
       - name: Build Docker images
         run: |
           sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
-          cd ${{ vars.PATH }}
+          cd ${{ vars.REPO_CLONE_PATH }}
           sudo make rebuild
           ENDSSH
 
       - name: Start Docker containers
         run: |
           sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
-          cd ${{ vars.PATH }}
+          cd ${{ vars.REPO_CLONE_PATH }}
           sudo docker compose -f ${{ vars.DOCKER_COMPOSE_FILE }} --env-file ${{ vars.ENV_FILE }} up -d
           ENDSSH
