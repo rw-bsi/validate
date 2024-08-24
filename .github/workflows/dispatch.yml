@@ -1,4 +1,4 @@
-name: example-client-payload-action
+name: Dispatch
   
 on: repository_dispatch
   
