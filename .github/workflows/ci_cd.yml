@@ -138,9 +138,10 @@ jobs:
           sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
           cd ${{ vars.REPO_CLONE_PATH }}
           COMMIT_HASH=$(git rev-parse --short HEAD)
-          VERSION="${{ vars.VERSION }}-${COMMIT_HASH}"
+          VERSION="${{ vars.VERSION }}"
           echo "Set VERSION to ${VERSION}"
-          echo "${VERSION}" > VERSION          
+          echo "Commit hash ${COMMIT_HASH}"
+          echo "${VERSION}" > .VERSION          
           ENDSSH
 
       - name: Build Docker images
