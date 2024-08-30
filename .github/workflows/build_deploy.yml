@@ -18,16 +18,6 @@ on:
         type: environment
         default: 'development'
         required: true
-        
-      version:
-        description: 'Semantic version'
-        required: true
-        default: '1.0.0'
-
-      path:
-        description: 'Local path on SSH host'
-        required: true
-        default: ${{ vars.REPO_CLONE_PATH }}
 
 jobs:
 
@@ -35,8 +25,6 @@ jobs:
 
     name: build frontend
     runs-on: ubuntu-latest
-    environment:
-      name: production
       
     steps:
       - name: Checkout sources
@@ -62,8 +50,6 @@ jobs:
 
     name: build backend
     runs-on: ubuntu-latest
-    environment:
-      name: production
 
     steps:
       - name: Checkout sources
@@ -111,8 +97,6 @@ jobs:
     name: deploy to server
     needs: [build_frontend, build_backend]
     runs-on: ubuntu-latest
-    environment:
-      name: production
      
     steps:
       - name: Set up SSH key
