@@ -29,6 +29,8 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
+        with:
+          branch: ${{ inputs.branch }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -54,7 +56,9 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
-
+        with:
+          branch: ${{ inputs.branch }}
+        
       - name: Fetch submodules
         run: |
           cd backend
@@ -123,12 +127,12 @@ jobs:
         run: |
           sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
           cd ${{ vars.REPO_CLONE_PATH }}
-          git checkout -q ${{ vars.BRANCH_NAME }} && git pull
+          git checkout -q ${{ inputs.branch }} && git pull
           sudo make fetch-modules
-          cd ${{ vars.REPO_CLONE_PATH }}/backend/apps/ifc_validation/checks/ifc_gherkin_rules && git checkout -q ${{ vars.BRANCH_NAME }} && git pull
-          cd ./ifc_validation_models && git checkout -q ${{ vars.BRANCH_NAME }} && git pull
+          cd ${{ vars.REPO_CLONE_PATH }}/backend/apps/ifc_validation/checks/ifc_gherkin_rules && git checkout -q ${{ inputs.branch }} && git pull
+          cd ./ifc_validation_models && git checkout -q ${{ inputs.branch }} && git pull
           cd ${{ vars.REPO_CLONE_PATH }}/backend/apps/ifc_validation/checks/step_file_parser && git checkout -q master && git pull
-          cd ${{ vars.REPO_CLONE_PATH }}/backend/apps/ifc_validation_models && git checkout -q ${{ vars.BRANCH_NAME }} && git pull
+          cd ${{ vars.REPO_CLONE_PATH }}/backend/apps/ifc_validation_models && git checkout -q ${{ inputs.branch }} && git pull
           cd ${{ vars.REPO_CLONE_PATH }}
           ./check-submodules.sh
           ENDSSH
