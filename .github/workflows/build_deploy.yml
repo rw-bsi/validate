@@ -137,7 +137,15 @@ jobs:
           cd ${{ vars.REPO_CLONE_PATH }}
           ./check-submodules.sh
           ENDSSH
-      
+
+      - name: Show repo & git status
+        run: |
+          cd ${{ vars.REPO_CLONE_PATH }}
+          echo "*** Validate repository"
+          git remote get-url origin && git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD
+          echo "*** git status"
+          git status
+
       - name: Set VERSION
         run: |
           sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
@@ -205,6 +213,14 @@ jobs:
           ./check-submodules.sh
           ENDSSH
       
+      - name: Show repo & git status
+        run: |
+          cd ${{ vars.REPO_CLONE_PATH }}
+          echo "*** Validate repository"
+          git remote get-url origin && git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD
+          echo "*** git status"
+          git status
+
       - name: Set VERSION
         run: |
           sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
