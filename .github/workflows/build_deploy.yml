@@ -3,18 +3,26 @@ name: Build & Deploy (manually)
 on:
   workflow_dispatch:
     inputs:
+    
       environment:
         description: 'Environment to (re)deploy'
         type: environment
+        default: 'development'
         required: true
+        
       branch:
         description: 'Branch to (re)deploy from'
         required: true
-        default: 'main'
+        default: 'development'
         type: choice
         options:
           - main
           - development
+
+      version:
+        description: 'Semantic version'
+        required: true
+        default: '1.0.0'
 
 jobs:
 
