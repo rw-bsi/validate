@@ -140,11 +140,13 @@ jobs:
 
       - name: Show repo & git status
         run: |
+          sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
           cd ${{ vars.REPO_CLONE_PATH }}
           echo "*** Validate repository"
           git remote get-url origin && git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD
           echo "*** git status"
           git status
+          ENDSSH
 
       - name: Set VERSION
         run: |
@@ -215,11 +217,13 @@ jobs:
       
       - name: Show repo & git status
         run: |
+          sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
           cd ${{ vars.REPO_CLONE_PATH }}
           echo "*** Validate repository"
           git remote get-url origin && git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD
           echo "*** git status"
           git status
+          ENDSSH
 
       - name: Set VERSION
         run: |
