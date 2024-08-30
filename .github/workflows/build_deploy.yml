@@ -27,7 +27,7 @@ on:
       path:
         description: 'Local path on SSH host'
         required: true
-        default: '${{ vars.REPO_CLONE_PATH }}'
+        default: ${{ vars.REPO_CLONE_PATH }}
 
 jobs:
 
