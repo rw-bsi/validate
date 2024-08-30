@@ -171,7 +171,7 @@ jobs:
     needs: [build_frontend, build_backend]
     runs-on: ubuntu-latest
     environment:
-      name: development
+      name: production
      
     steps:
       - name: Set up SSH key        
