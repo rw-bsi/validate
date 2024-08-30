@@ -4,12 +4,6 @@ on:
   workflow_dispatch:
     inputs:
     
-      environment:
-        description: 'Environment to (re)deploy'
-        type: environment
-        default: 'development'
-        required: true
-        
       branch:
         description: 'Branch to (re)deploy from'
         required: true
@@ -19,10 +13,21 @@ on:
           - main
           - development
 
+      environment:
+        description: 'Environment to (re)deploy to'
+        type: environment
+        default: 'development'
+        required: true
+        
       version:
         description: 'Semantic version'
         required: true
         default: '1.0.0'
+
+      path:
+        description: 'Local path on SSH host'
+        required: true
+        default: '${{ vars.REPO_CLONE_PATH }}'
 
 jobs:
 
