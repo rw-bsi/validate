@@ -1,4 +1,4 @@
-name: PROD Build & Deploy (manual)
+name: Build & Deploy (manually)
 
 concurrency: 
   group: production
