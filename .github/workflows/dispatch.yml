@@ -42,6 +42,7 @@ jobs:
           git clone ${{ github.event.repository.clone_url }} .
           git fetch && git pull
           git checkout -B ${{ github.event.client_payload.branch }}
+          git branch --set-upstream-to=origin/${{ github.event.client_payload.branch }} ${{ github.event.client_payload.branch }}
           git pull
           git submodule update --init --recursive
           git submodule update --remote
@@ -50,19 +51,20 @@ jobs:
         run: |
           cd ${{ github.workspace }}/backend/apps/ifc_validation/checks/ifc_gherkin_rules 
           git checkout -B ${{ github.event.client_payload.branch }}
-          git pull
+          git branch --set-upstream-to=origin/${{ github.event.client_payload.branch }} ${{ github.event.client_payload.branch }}
+          git pull          
           
       - name: Fetch latest submodule - step_file_parser
         run: |
           cd ${{ github.workspace }}/backend/apps/ifc_validation/checks/step_file_parser 
-          git checkout -B master # note: only using master branch for now
-          git pull
+          git checkout -B master # note: only using master branch for now          
           
       - name: Fetch latest submodule - ifc-validation-models
         run: |
           cd ${{ github.workspace }}/backend/apps/ifc_validation_models
           git checkout -B ${{ github.event.client_payload.branch }}
-          git pull
+          git branch --set-upstream-to=origin/${{ github.event.client_payload.branch }} ${{ github.event.client_payload.branch }}
+          git pull          
           
       - name: Show submodule status
         run: |
