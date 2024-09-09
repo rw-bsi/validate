@@ -1,4 +1,4 @@
-name: Check Deployment (manually)
+name: Get Latest & Check Deployment (manually, no redeploy)
 
 on:
   workflow_dispatch:
@@ -16,7 +16,7 @@ jobs:
   deploy_dev:
     
     if: ${{ inputs.environment == 'development' }}
-    name: deploy to server (dev)
+    name: check (dev)
     runs-on: ubuntu-latest
     environment:
       name: development
@@ -39,6 +39,18 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USERNAME }}
           SSH_KEY: ${{ secrets.SSH_PRIV_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - name: Get latest sources
+        run: |
+           ssh dev 'cd ${{ vars.REPO_CLONE_PATH }} && \
+           git checkout -q ${{ inputs.branch }} && \
+           git pull'
+
+      - name: Get latest submodules
+        run: |
+           ssh dev 'cd ${{ vars.REPO_CLONE_PATH }} && \
+           git submodule update --init --recursive && \
+           git submodule update --remote'
       
       - name: Show repo & git status
         run: |
@@ -48,11 +60,16 @@ jobs:
           echo "*** git status" && \
           git status'
 
+      - name: Show submodule status
+        run: |
+          ssh dev 'cd ${{ vars.REPO_CLONE_PATH }} && \
+          ./check-submodules.sh'
+
   # note: duplicate deploy tasks per environment (else unable to access environment secrets)
   deploy_prod:
     
     if: ${{ inputs.environment == 'production' }}
-    name: deploy to server (prd)
+    name: check (prd)
     runs-on: ubuntu-latest
     environment:
       name: production
