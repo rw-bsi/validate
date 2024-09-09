@@ -49,7 +49,12 @@ jobs:
       - name: Check local changes
         run: |
            ssh dev 'cd ${{ vars.REPO_CLONE_PATH }} && \
-           if [ "$(git status --porcelain)" ]; then echo "Local changes" && git status --porcelain && exit -1; else echo "No local changes"; fi'
+           if [ "$(git status --porcelain)" ]; then 
+             echo "ERROR: There are local changes"
+             git status --porcelain
+           else 
+             echo "No local changes"
+           fi'
 
       - name: Get latest submodules
         run: |
