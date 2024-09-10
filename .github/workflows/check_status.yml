@@ -30,7 +30,7 @@ jobs:
           Host ssh_host
             HostName $SSH_HOST
             User $SSH_USER
-            IdentityFile ~/.ssh/host.key
+            IdentityFile ~/.ssh/ssh_host.key
             StrictHostKeyChecking no
           END
         env:
