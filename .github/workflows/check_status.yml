@@ -1,4 +1,4 @@
-name: Get Latest & Check Deployment (manually, no redeploy)
+name: Connect & Check Deployment (manually, no redeploy)
 
 on:
   workflow_dispatch:
@@ -40,12 +40,6 @@ jobs:
           SSH_KEY: ${{ secrets.SSH_PRIV_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
-      - name: Get latest sources
-        run: |
-           ssh dev 'cd ${{ vars.REPO_CLONE_PATH }} && \
-           git checkout -q ${{ inputs.branch }} && \
-           git pull'
-
       - name: Check local changes
         run: |
            ssh dev 'cd ${{ vars.REPO_CLONE_PATH }} && \
@@ -57,12 +51,6 @@ jobs:
              exit -1
            fi'
 
-      - name: Get latest submodules
-        run: |
-           ssh dev 'cd ${{ vars.REPO_CLONE_PATH }} && \
-           git submodule update --init --recursive && \
-           git submodule update --remote'
-      
       - name: Show repo & git status
         run: |
           ssh dev 'cd ${{ vars.REPO_CLONE_PATH }} && \
@@ -86,68 +74,44 @@ jobs:
       name: production
      
     steps:
-      - name: Set up SSH key        
+
+      - name: Configure SSH
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIV_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -p 22 ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-  
-      - name: Install sshpass
-        run: sudo apt-get install sshpass
-        
-      - name: Stop Docker containers
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/prod.key
+          chmod 600 ~/.ssh/prod.key
+          cat >>~/.ssh/config <<END
+          Host prod
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/prod.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.SSH_USERNAME }}
+          SSH_KEY: ${{ secrets.SSH_PRIV_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+
+      - name: Check local changes
         run: |
-          sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
-          cd ${{ vars.REPO_CLONE_PATH }}
-          sudo make stop
-          ENDSSH
-          
-      - name: Fetch sources & submodules
-        run: |
-          sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
-          cd ${{ vars.REPO_CLONE_PATH }}
-          git checkout -q ${{ inputs.branch }} && git pull
-          sudo make fetch-modules
-          cd ${{ vars.REPO_CLONE_PATH }}/backend/apps/ifc_validation/checks/ifc_gherkin_rules && git checkout -q ${{ inputs.branch }} && git pull
-          cd ./ifc_validation_models && git checkout -q ${{ inputs.branch }} && git pull
-          cd ${{ vars.REPO_CLONE_PATH }}/backend/apps/ifc_validation/checks/step_file_parser && git checkout -q master && git pull
-          cd ${{ vars.REPO_CLONE_PATH }}/backend/apps/ifc_validation_models && git checkout -q ${{ inputs.branch }} && git pull
-          cd ${{ vars.REPO_CLONE_PATH }}
-          ./check-submodules.sh
-          ENDSSH
-      
+           ssh prod 'cd ${{ vars.REPO_CLONE_PATH }} && \
+           if [ -z "$(git status --porcelain)" ]; then 
+             echo "No local changes"
+           else
+             echo "ERROR: There are local changes"
+             git status --porcelain
+             exit -1
+           fi'
+
       - name: Show repo & git status
         run: |
-          sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
-          cd ${{ vars.REPO_CLONE_PATH }}
-          echo "*** Validate repository"
-          git remote get-url origin && git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD
-          echo "*** git status"
-          git status
-          ENDSSH
+          ssh prod 'cd ${{ vars.REPO_CLONE_PATH }} && \
+          echo "*** Validate repository" && \
+          git remote get-url origin && git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD && \
+          echo "*** git status" && \
+          git status'
 
-      - name: Set VERSION
+      - name: Show submodule status
         run: |
-          sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
-          cd ${{ vars.REPO_CLONE_PATH }}
-          COMMIT_HASH=$(git rev-parse --short HEAD)
-          VERSION="${{ vars.VERSION }}"
-          echo "Set VERSION to ${VERSION}"
-          echo "Commit hash ${COMMIT_HASH}"
-          echo "${VERSION}" > .VERSION          
-          ENDSSH
-          
-      - name: Build Docker images
-        run: |
-          sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
-          cd ${{ vars.REPO_CLONE_PATH }}
-          sudo make rebuild
-          ENDSSH
-          
-      - name: Start Docker containers
-        run: |
-          sshpass ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} bash <<'ENDSSH'
-          cd ${{ vars.REPO_CLONE_PATH }}
-          sudo docker compose -f ${{ vars.DOCKER_COMPOSE_FILE }} --env-file ${{ vars.ENV_FILE }} up -d
-          ENDSSH
+          ssh prod 'cd ${{ vars.REPO_CLONE_PATH }} && \
+          ./check-submodules.sh'
