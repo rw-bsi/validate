@@ -38,14 +38,6 @@ jobs:
           SSH_KEY: ${{ secrets.SSH_PRIV_KEY }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
-      - name: Show repo & git status
-        run: |
-          ssh ssh_host 'cd ${{ vars.REPO_CLONE_PATH }}
-          echo "*** Validate repository"
-          git remote get-url origin && git rev-parse --abbrev-ref HEAD && git rev-parse --short HEAD
-          echo "*** git status"
-          git status'
-
       - name: Check local changes
         run: |
            ssh ssh_host 'cd ${{ vars.REPO_CLONE_PATH }}
